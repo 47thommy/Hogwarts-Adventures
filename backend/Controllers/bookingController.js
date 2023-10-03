@@ -2,20 +2,19 @@ import Booking from "./../models/Booking.js";
 
 // create new booking
 export const createBooking = async (req, res) => {
-  const newBooking = new Booking(req.body);
+  const userId = req.user.id;
+  const newBooking = new Booking({ ...req.body, userId });
 
   try {
     const savedBooking = await newBooking.save();
 
-    res
-      .status(200)
-      .json({
-        success: true,
-        message: "Your tour is booked!",
-        data: savedBooking,
-      });
+    res.status(200).json({
+      success: true,
+      message: "Your tour is booked!",
+      data: savedBooking,
+    });
   } catch (error) {
-    res.status(500).json({ success: false, message: "Internal server error!" });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
